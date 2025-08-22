@@ -17,7 +17,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	path := getPath()
+	var path string
+	flag.StringVar(&path, "path", "", "Path to a file")
+	flag.Parse()
 
 	if err := validation.ValidateFilePath(path); err != nil {
 		fmt.Println(err)
@@ -35,7 +37,7 @@ func main() {
 	scanner := bufio.NewScanner(file)
 	scanner.Split(bufio.ScanWords)
 
-	list := entity.Vocabulary{}
+	list := entity.NewVocabulary()
 
 	for scanner.Scan() {
 		list.AddOrInc(scanner.Text())
@@ -50,11 +52,4 @@ func main() {
 	for i, word := range topList {
 		fmt.Printf(constants.LIST_ITEM, i+1, word.Text, word.Count)
 	}
-}
-
-func getPath() (p string) {
-	flag.StringVar(&p, "path", "", "Path to a file")
-	flag.Parse()
-
-	return p
 }

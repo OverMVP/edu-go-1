@@ -1,9 +1,13 @@
 package entity
 
-import "slices"
+import (
+	"slices"
+)
 
 type (
-	Vocabulary map[string]int
+	Vocabulary struct {
+		words map[string]int
+	}
 
 	Word struct {
 		Text  string
@@ -11,28 +15,30 @@ type (
 	}
 )
 
-func (w Vocabulary) AddOrInc(word string) {
-	if _, ok := w[word]; !ok {
-		w[word] = 1
-	} else {
-		w[word]++
+func NewVocabulary() *Vocabulary {
+	return &Vocabulary{
+		words: make(map[string]int),
 	}
 }
 
-func (w Vocabulary) GetUniqueCount() (count int64) {
-	for _, v := range w {
+func (w *Vocabulary) AddOrInc(word string) {
+	w.words[word]++
+}
+
+func (w *Vocabulary) GetUniqueCount() (c int) {
+	for _, v := range w.words {
 		if v == 1 {
-			count++
+			c++
 		}
 	}
 
-	return
+	return c
 }
 
-func (w Vocabulary) GetMostFrequent(num int) []Word {
-	pairs := make([]Word, 0, len(w))
+func (w *Vocabulary) GetMostFrequent(num int) []Word {
+	pairs := make([]Word, 0, len(w.words))
 
-	for k, v := range w {
+	for k, v := range w.words {
 		pairs = append(pairs, Word{Text: k, Count: v})
 	}
 
@@ -54,5 +60,5 @@ func (w Vocabulary) GetMostFrequent(num int) []Word {
 		return pairs
 	}
 
-	return pairs[0:num]
+	return pairs[:num]
 }
