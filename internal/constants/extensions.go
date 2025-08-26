@@ -1,5 +1,5 @@
 package constants
 
 const (
-	TXT = ".txt"
+	ExtensionTxt = ".txt"
 )

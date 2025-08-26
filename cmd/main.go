@@ -3,8 +3,9 @@ package main
 import (
 	"bufio"
 	"flag"
-	"fmt"
+	"log/slog"
 	"os"
+	"strconv"
 
 	"l1/internal/constants"
 	"l1/internal/entity"
@@ -13,8 +14,7 @@ import (
 
 func main() {
 	if len(os.Args) > 2 {
-		fmt.Println(constants.TOO_MANY_ARGS)
-		os.Exit(1)
+		panic(constants.ErrorTooManyArgs)
 	}
 
 	var path string
@@ -22,14 +22,12 @@ func main() {
 	flag.Parse()
 
 	if err := validation.ValidateFilePath(path); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		panic(err)
 	}
 
 	file, err := os.Open(path)
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		panic(err)
 	}
 
 	defer file.Close()
@@ -43,13 +41,13 @@ func main() {
 		list.AddOrInc(scanner.Text())
 	}
 
-	fmt.Printf(constants.UNIQUE_COUNT_TITLE, list.GetUniqueCount())
+	slog.Info("Number of unique", "words", list.GetUniqueCount())
 
 	topList := list.GetMostFrequent(10)
 
-	fmt.Printf(constants.MOST_FREQUENT_TITLE, 10)
+	slog.Info("Top 10 most frequent words")
 
 	for i, word := range topList {
-		fmt.Printf(constants.LIST_ITEM, i+1, word.Text, word.Count)
+		slog.Info("", "index", i, "word", word.Text, "count", strconv.Itoa(word.Count))
 	}
 }

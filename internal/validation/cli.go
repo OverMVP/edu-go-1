@@ -10,25 +10,25 @@ import (
 
 func ValidateFilePath(path string) error {
 	if path == "" {
-		return fmt.Errorf(constants.NO_PATH_GIVEN)
+		return fmt.Errorf(constants.ErrorNoPath)
 	}
 
 	info, err := os.Stat(path)
 
 	if os.IsNotExist(err) {
-		return fmt.Errorf(constants.FILE_DOES_NOT_EXIST, path)
+		return fmt.Errorf(constants.ErrorFileNotExist, path)
 	}
 
 	if err != nil {
-		return fmt.Errorf(constants.FILE_INFO_ERROR, err)
+		return fmt.Errorf(constants.ErrorFileInfo, err)
 	}
 
 	if info.IsDir() {
-		return fmt.Errorf(constants.DIRECTORY_ERROR, path)
+		return fmt.Errorf(constants.ErrorDirectory, path)
 	}
 
-	if filepath.Ext(path) != constants.TXT {
-		return fmt.Errorf(constants.ONLY_TXT, path)
+	if filepath.Ext(path) != constants.ExtensionTxt {
+		return fmt.Errorf(constants.ErrorOnlyTxt, path)
 	}
 
 	return nil
